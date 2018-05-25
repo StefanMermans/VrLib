@@ -60,7 +60,10 @@ namespace vrlib
 		void send(const json &value, int sock = 0);
 		void waitForConnection();
 
-		void callBackOnce(const std::string &action, std::function<void(const json &)> callback);
+		void callbackContinuous(
+			const std::string &action, std::function<void(const json&)> callback);
+		void callBackOnce(
+			const std::string &action, std::function<void(const json &)> callback);
 		json call(const std::string &action, const json& data = nullptr);
 		Tunnel* createTunnel(const std::string &sessionId);
 		void onTunnelCreate(const std::function<void(Tunnel*)> &onTunnel, const std::string &key = "");

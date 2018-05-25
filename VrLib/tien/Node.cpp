@@ -91,22 +91,17 @@ namespace vrlib
 			return v;
 		}
 
-		void Node::fromJson(const json &data, const json &totalJson, const std::function<Component*(const json &)> &callback)
-		{
-			this->fromJson(data, totalJson, [=](const json& jsonParam, const std::string stringParam)
-			{
-				return callback(data);
-			});
-		}
 
-		void Node::fromJson(const json &data, const json &totalJson, const std::function<Component*(const json &, const std::string)> &callback)
+
+		void Node::fromJson(const json &data, const json &totalJson, const std::function<Component*(const json &)> &callback)
 		{
 			setTreeDirty(this, true);
 			name = data["name"].get<std::string>();
 			guid = data["uuid"].get<std::string>();
 			
-			if (data.find("prefab") != data.end())
+			if (data.find("prefab") != data.end()) {
 				prefabFile = data["prefab"];
+			}
 
 			for (auto c : components)
 				delete c;
@@ -116,7 +111,6 @@ namespace vrlib
 			transform = nullptr;
 			rigidBody = nullptr;
 			light = nullptr;
-
 
 			if(data.find("components") != data.end())
 				for (auto c : data["components"])
@@ -167,7 +161,7 @@ namespace vrlib
 					{
 						if (callback)
 						{
-							vrlib::tien::Component* newComponent = callback(c, guid);
+							vrlib::tien::Component* newComponent = callback(c);
 							if (newComponent)
 								addComponent(newComponent);
 							else
@@ -176,9 +170,12 @@ namespace vrlib
 					}
 				}
 
-			if(data.find("children") != data.end())
-				for (auto c : data["children"])
+			if (data.find("children") != data.end()) {
+				for (auto c : data["children"]) {
 					(new Node("", this))->fromJson(c, totalJson, callback);
+				}
+
+			}
 		}
 
 		void Node::updateNodePointer(vrlib::tien::Node * oldNode, vrlib::tien::Node * newNode)
@@ -200,7 +197,6 @@ namespace vrlib
 			n->addComponent(new vrlib::tien::components::Transform(glm::vec3(0, 0, 0), glm::quat(), glm::vec3(0.02f, 0.02f, 0.02f)));
 			n->addComponent(new vrlib::tien::components::ModelRenderer("sphere.shape"));
 		}
-
 
 
 		Node * Node::findNodeWithName(const std::string & name)

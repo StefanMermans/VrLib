@@ -61,22 +61,22 @@ namespace vrlib
 	{
 		while (!running)
 		{
-		#ifdef WIN32
+#ifdef WIN32
 			Sleep(1);
-		#else
+#else
 			usleep(1000);
-		#endif
+#endif
 		}
 		char hostname[1024] = "";
 		char applicationName[1024] = "";
 		char username[1024] = "";
 
-		#ifdef WIN32
+#ifdef WIN32
 		gethostname(hostname, 1024);
 		::GetModuleFileName(0, applicationName, 1024);
 		DWORD username_len = 1024;
 		GetUserName(username, &username_len);
-		#endif
+#endif
 
 		std::time_t startTime = std::time(nullptr);
 
@@ -103,11 +103,11 @@ namespace vrlib
 			{
 				logger << "Cannot create socket, try a reboot" << Log::newline;
 				closesocket(s);
-				#ifdef WIN32
+#ifdef WIN32
 				Sleep(60000);
-				#else
+#else
 				sleep(60);
-				#endif
+#endif
 				continue;
 			}
 
@@ -116,15 +116,15 @@ namespace vrlib
 			rc = ::connect(tempSocket, (struct sockaddr*) &addr, siz);
 			if (rc < 0)
 			{
-				if(lastConnected)
+				if (lastConnected)
 					logger << "Could not connect to api host: " << apiHost << Log::newline;
 				lastConnected = false;
 				closesocket(tempSocket);
-				#ifdef WIN32
+#ifdef WIN32
 				Sleep(1000);
-				#else
+#else
 				sleep(1);
-				#endif
+#endif
 				continue;
 			}
 			lastConnected = true;
@@ -229,9 +229,14 @@ namespace vrlib
 			sleep(0);
 #endif
 	}
+	void ServerConnection::callbackContinuous(
+		const std::string &action, std::function<void(const json &)> callback)
+	{
+		this->callbacks[action] = callback;
+	}
 
-
-	void ServerConnection::callBackOnce(const std::string &action, std::function<void(const json &)> callback)
+	void ServerConnection::callBackOnce(
+		const std::string &action, std::function<void(const json &)> callback)
 	{
 		singleCallbacks[action] = callback;
 	}
