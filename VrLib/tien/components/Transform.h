@@ -42,7 +42,7 @@ namespace vrlib
 				void lookAt(const glm::vec3 &position, const glm::vec3 &target, const glm::vec3 &up);
 				void lookAt(const glm::vec3 &target, const glm::vec3 &up = glm::vec3(0,1,0));
 				void setGlobalPosition(const glm::vec3 &position, bool resetPhyics = true);
-				void setGlobalRotation(const glm::quat &rotation);
+				void setGlobalRotation(const glm::quat &rotation, bool resetPhysics = true);
 				void setGlobalScale(const glm::vec3 &scale);
 
 				glm::vec3 getGlobalPosition() const;

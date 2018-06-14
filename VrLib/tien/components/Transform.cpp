@@ -69,6 +69,23 @@ namespace vrlib
 				}
 			}
 
+			void Transform::setGlobalRotation(const glm::quat &rotation, bool resetPhysics)
+			{
+				glm::quat parentQuat;
+				if (node->parent && node->parent->transform)
+				{
+					parentQuat = node->parent->transform->getGlobalRotation;
+				}
+
+				parentQuat = glm::inverse(parentQuat);
+				this->rotation = glm::quat(parentQuat * rotation);
+
+				auto rigidBody = node->getComponent<RigidBody>();
+				if (resetPhysics && rigidBody && rigidBody->actor)
+				{
+					rigidBody->actor->setGlobalPose(physx::PxTransform(physx::PxQuat(rotation.x, rotation.y, rotation.z, rotation.w)));
+				}
+			}
 
 			glm::quat Transform::getGlobalRotation() const
 			{
@@ -100,12 +117,6 @@ namespace vrlib
 					return scale;
 				};
 				return parentScale(node);
-			}
-
-
-			void Transform::setGlobalRotation(const glm::quat &rotation)
-			{
-				this->rotation = rotation;//TODO
 			}
 
 			void Transform::buildTransform(const glm::mat4 &parentTransform)
