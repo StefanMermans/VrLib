@@ -41,7 +41,10 @@ namespace vrlib
 	class ServerConnection
 	{
 #ifdef _DEBUG
-		const std::string apiHost = "127.0.0.1";
+		//const std::string apiHost = "127.0.0.1";
+		//const std::string apiHost = "169.254.192.16";
+		//const std::string apiHost = "169.254.106.213";
+		const std::string apiHost = "145.48.205.74";
 #else
 		const std::string apiHost = "145.48.6.10";
 #endif
